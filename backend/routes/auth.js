@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-import { signupSchema, loginSchema } from "../validators/auth.js";
+import { signupSchema, loginSchema } from "../validators/zod.js";
 
 const router = express.Router();
 
