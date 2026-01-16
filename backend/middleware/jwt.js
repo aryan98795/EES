@@ -5,7 +5,7 @@ export const auth = (req, res, next) => {
     if (!token) return res.sendStatus(401);
 
     try {
-        const decoded = jwt.verify(token, process.send.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         next();
     }
