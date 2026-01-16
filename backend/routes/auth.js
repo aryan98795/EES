@@ -13,7 +13,7 @@ router.post("/signup", async (req, res) => {
 
     const { name, email, password, role } = parsed.data;
 
-    const hast = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 10);
 
     await User.create({
         name: name,
@@ -30,6 +30,7 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     const parsed = loginSchema.safeParse(req.body);
+    console.log(req.body);
     if (!parsed.success) return res.status(400).json(parsed.error);
     const { email, password } = parsed.data;
 
