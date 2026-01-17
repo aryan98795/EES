@@ -11,7 +11,7 @@ router.post("/signup", async (req, res) => {
     const parsed = signupSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json(parsed.error);
 
-    const { name, email, password, role } = parsed.data;
+    const { name, email, password } = parsed.data;
 
     const hash = await bcrypt.hash(password, 10);
 
@@ -19,7 +19,7 @@ router.post("/signup", async (req, res) => {
         name: name,
         email: email,
         password: hash,
-        role: role
+        role: "user"
     });
 
     res.json({
@@ -41,6 +41,12 @@ router.post("/login", async (req, res) => {
     });
 
     const ok = await bcrypt.compare(password, user.password);
+
+    if (!ok) {
+        return res.status(401).json({
+            message: "invalid credentials"
+        });
+    }
 
     const token = jwt.sign(
         { id: user._id, role: user.role },

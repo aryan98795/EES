@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from "../routes/auth.js";
 import { auth, requireRole } from "../middleware/jwt.js";
+import adminRoutes from "../routes/admin.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 
 mongoose.connect(process.env.MONGO_URI);
 
