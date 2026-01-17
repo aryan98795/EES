@@ -3,19 +3,24 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from "../routes/auth.js";
+import { auth, requireRole } from "../middleware/jwt.js";
 
 dotenv.config();
 
 const app = express();
 
-app.use("/api/auth", authRoutes);
-
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/auth", authRoutes);
+
 mongoose.connect(process.env.MONGO_URI);
+
+
+app.get("/admin", auth, requireRole("admin"), (req, res) => {
+    res.json({ message: "Admin access granted" });
+});
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port ${process.env.PORT || 3000}`);
-})
-
+});

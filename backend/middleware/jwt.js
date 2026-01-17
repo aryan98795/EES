@@ -8,8 +8,7 @@ export const auth = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         next();
-    }
-    catch (error) {
+    } catch (error) {
         res.status(401).json({
             error: error.name,
             message: error.message
@@ -17,7 +16,7 @@ export const auth = (req, res, next) => {
     }
 };
 
-export const requiredRole = (role) => (req, res, next) => {
+export const requireRole = (role) => (req, res, next) => {
     if (req.user.role !== role) return res.sendStatus(403);
     next();
-}
+};
