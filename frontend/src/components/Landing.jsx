@@ -69,7 +69,7 @@ export default function Home({ darkMode }) {
                                 : "text-blue-600 hover:text-blue-800 border-blue-100 hover:border-blue-600"
                             }`}
                     >
-                        Electrical Engineering Society
+                        Electronics Engineering Society
                     </Link>.
                     A space to connect, share knowledge, and innovate.
                 </p>
