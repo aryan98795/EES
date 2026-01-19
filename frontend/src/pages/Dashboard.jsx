@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
-export default function Dashboard({ darkMode }) {
+export default function Dashboard() {
+    const { darkMode } = useTheme();
     const r = localStorage.getItem("role");
-    const nav = useNavigate();
 
     return (
         <div className={`min-h-[calc(100vh-80px)] flex items-center justify-center px-6 transition-all duration-500 ${darkMode ? "bg-[#0f172a]" : "bg-[#f1f9ff]"}`}>
@@ -21,14 +21,7 @@ export default function Dashboard({ darkMode }) {
                     <div className="text-lg font-bold mt-1">{r}</div>
                 </div>
 
-                <div className="flex justify-end">
-                    <button
-                        onClick={() => nav("/logout")}
-                        className="px-6 py-3 bg-red-500 text-white font-semibold rounded-xl shadow-lg shadow-red-500/20 hover:bg-red-600 active:scale-95 transition-all"
-                    >
-                        Logout
-                    </button>
-                </div>
+
             </div>
         </div>
     );

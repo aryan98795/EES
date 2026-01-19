@@ -1,98 +1,120 @@
-    import { Link, NavLink } from "react-router-dom";
-    import { useState } from "react";
-    import { FiChevronDown, FiSun, FiMoon } from "react-icons/fi";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { FiChevronDown, FiSun, FiMoon, FiMenu, FiX } from "react-icons/fi";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
-    // Navbar ko props receive karne honge
-    const Navbar = ({ darkMode, setDarkMode }) => {
-        const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const Navbar = () => {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const { isLoggedIn } = useAuth();
+    const { darkMode, setDarkMode } = useTheme();
+    const [auth, setAuth] = useState(!!localStorage.getItem("token"));
 
-        const navLinks = [
-            { to: "/", label: "Home" },
-            { to: "/events", label: "Events", hasDropdown: true },
-            { to: "/forum", label: "Forum", hasDropdown: true },
-            { to: "/alumni", label: "Alumni" },
-            { to: "/team", label: "Team" },
-        ];
+    useEffect(() => {
+        const f = () => {
+            setAuth(!!localStorage.getItem("token"));
+        };
+        window.addEventListener("storage", f);
+        return () => window.removeEventListener("storage", f);
+    }, []);
 
-        return (
-            <nav className={`sticky top-0 z-50 transition-colors duration-300 border-b ${darkMode
-                    ? "bg-[#0f172a] text-white border-slate-800"
-                    : "bg-white text-slate-800 border-slate-200/50"
-                }`}>
-                <div className="mx-auto w-full px-4 sm:px-8 lg:px-16">
-                    <div className="flex h-20 items-center justify-between">
+    const navLinks = [
+        { to: "/", label: "Home" },
+        { to: "/events", label: "Events" },
+        { to: "/forum", label: "Forum" },
+        { to: "/alumni", label: "Alumni" },
+        { to: "/team", label: "Team" },
+    ];
 
-                        {/* Left: Branding */}
-                        <div className="flex items-center gap-2 transition-transform hover:scale-105">
-                            <div className="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-600/20">
-                                <img src="/EES_logo.jpeg" alt="Logo" className="h-7 w-7 rounded-md invert brightness-200" />
-                            </div>
-                            <span className="text-2xl font-bold tracking-tight">EES</span>
-                        </div>
-
-                        {/* Center: Links with Chevron */}
-                        <div className="hidden lg:flex items-center gap-8">
-                            {navLinks.map((link) => (
-                                <div key={link.to} className="group relative flex items-center gap-1 cursor-pointer">
-                                    <NavLink
-                                        to={link.to}
-                                        className={({ isActive }) =>
-                                            `text-[15px] font-medium transition-colors ${isActive ? "text-blue-500" : darkMode ? "text-slate-300 hover:text-white" : "text-slate-600 hover:text-blue-600"
-                                            }`
-                                        }
-                                    >
-                                        {link.label}
-                                    </NavLink>
-                                    {link.hasDropdown && (
-                                        <FiChevronDown className={`w-4 h-4 transition-transform duration-300 group-hover:rotate-180 ${darkMode ? "text-slate-500" : "text-slate-400"}`} />
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Right Side */}
-                        <div className="flex items-center gap-6">
-                            {/* THEME TOGGLE (Uses global state) */}
-                            <button
-                                onClick={() => setDarkMode(!darkMode)}
-                                className={`p-2 rounded-full transition-colors ${darkMode ? "hover:bg-slate-800 text-yellow-400" : "hover:bg-slate-100 text-slate-600"
-                                    }`}
-                            >
-                                {darkMode ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
-                            </button>
-
-                            <div className="hidden sm:flex items-center gap-4">
-                                <Link to="/login" className={`px-5 py-2.5 rounded-lg font-semibold border transition-all ${darkMode
-                                        ? "border-blue-600/50 text-blue-400 hover:bg-blue-600/10"
-                                        : "border-blue-600/30 text-blue-600 hover:bg-blue-50"
-                                    }`}>
-                                    Sign In
-                                </Link>
-                                <Link to="/signup" className="px-6 py-2.5 rounded-lg font-semibold bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition-all">
-                                    Sign Up
-                                </Link>
-                            </div>
-
-                            <button className="lg:hidden text-2xl" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                                {isMobileMenuOpen ? "✕" : "☰"}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Mobile Menu Panel */}
-                <div className={`lg:hidden absolute top-20 left-0 w-full p-6 transition-all duration-300 shadow-2xl ${isMobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0 pointer-events-none"
-                    } ${darkMode ? "bg-[#1e293b]" : "bg-white"}`}>
-                    <div className="space-y-4">
-                        {navLinks.map((link) => (
-                            <Link key={link.to} to={link.to} className={`block text-lg font-medium border-b pb-2 ${darkMode ? "border-slate-700 text-slate-200" : "border-slate-100 text-slate-800"}`} onClick={() => setIsMobileMenuOpen(false)}>
-                                {link.label}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </nav>
-        );
+    const menuVariants = {
+        closed: { opacity: 0, height: 0, transition: { duration: 0.3, ease: "easeInOut" } },
+        open: { opacity: 1, height: "auto", transition: { duration: 0.4, ease: "easeOut" } }
     };
 
-    export default Navbar;
+    const linkVariants = {
+        closed: { x: -20, opacity: 0 },
+        open: (i) => ({
+            x: 0,
+            opacity: 1,
+            transition: { delay: i * 0.1, duration: 0.3 }
+        })
+    };
+
+    return (
+        <nav className={`sticky top-0 z-50 border-b ${darkMode ? "bg-[#0f172a] text-white border-slate-800" : "bg-white text-slate-800 border-slate-200/50"}`}>
+            <div className="mx-auto w-full px-4 sm:px-8 lg:px-16">
+                <div className="flex h-20 items-center justify-between">
+
+                    <Link to="/" className="flex items-center gap-2">
+                        <div className="bg-blue-600 p-2 rounded-lg">
+                            <img src="/EES_logo.jpeg" className="h-7 w-7 rounded-md invert brightness-200" alt="Logo" />
+                        </div>
+                        <span className="text-2xl font-bold">EES</span>
+                    </Link>
+
+                    <div className="hidden lg:flex items-center gap-8">
+                        {navLinks.map((link) => (
+                            <NavLink key={link.to} to={link.to} className="hover:text-blue-500 transition-colors font-medium">
+                                {link.label}
+                            </NavLink>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <motion.button whileTap={{ scale: 0.8 }} onClick={() => setDarkMode(!darkMode)} className="p-2">
+                            {darkMode ? <FiSun className="text-yellow-400" /> : <FiMoon />}
+                        </motion.button>
+
+                        <button className="lg:hidden text-2xl" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                            {isMobileMenuOpen ? <FiX /> : <FiMenu />}
+                        </button>
+
+                        <div className="hidden sm:flex items-center gap-4">
+                            {!isLoggedIn ? (<>
+                                <Link to="/signup" className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-300">Sign Up</Link>
+                                <Link to="/login" className="px-4 py-2 rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-50 transition-all">Sign In</Link>
+                            </>)
+                                :
+                                <Link to="/logout" className="px-4 py-2 bg-red-500 text-white rounded-lg transition-colors duration-300 hover:bg-red-600 active:bg-red-700">Logout</Link>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <AnimatePresence>
+                    {isMobileMenuOpen && (
+                        <motion.div
+                            variants={menuVariants}
+                            initial="closed"
+                            animate="open"
+                            exit="closed"
+                            className="lg:hidden overflow-hidden border-t border-slate-100 dark:border-slate-800"
+                        >
+                            <div className="flex flex-col gap-4 py-6 px-2">
+                                {navLinks.map((link, i) => (
+                                    <motion.div key={link.to} custom={i} variants={linkVariants}>
+                                        <NavLink
+                                            to={link.to}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="text-lg font-medium block hover:text-blue-500 transition-colors"
+                                        >
+                                            {link.label}
+                                        </NavLink>
+                                    </motion.div>
+                                ))}
+                                <hr className="border-slate-100 dark:border-slate-800" />
+                                <div className="flex flex-col gap-3">
+                                    <Link to="/login" className="w-full py-3 text-center rounded-xl bg-blue-600 text-white">Get Started</Link>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </nav>
+    );
+};
+
+export default Navbar;

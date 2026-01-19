@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
-export default function Home({ darkMode }) {
+
+export default function Home() {
+    const { isLoggedIn } = useAuth();
+    const { darkMode } = useTheme();
     const textureStyles = `
         @keyframes textureMove {
             0% { transform: translate(0, 0); }
@@ -41,8 +46,8 @@ export default function Home({ darkMode }) {
 
             <div
                 className={`absolute inset-0 pointer-events-none z-1 ${darkMode
-                        ? "bg-[radial-gradient(circle_at_center,rgba(30,41,59,0.5)_0%,transparent_70%)]"
-                        : "bg-[radial-gradient(circle_at_center,rgba(232,231,255,0.8)_0%,transparent_70%)]"
+                    ? "bg-[radial-gradient(circle_at_center,rgba(30,41,59,0.5)_0%,transparent_70%)]"
+                    : "bg-[radial-gradient(circle_at_center,rgba(232,231,255,0.8)_0%,transparent_70%)]"
                     }`}
             ></div>
 
@@ -65,8 +70,8 @@ export default function Home({ darkMode }) {
                     <Link
                         to="/forum"
                         className={`font-medium transition-colors border-b ${darkMode
-                                ? "text-blue-400 hover:text-blue-300 border-slate-800"
-                                : "text-blue-600 hover:text-blue-800 border-blue-100 hover:border-blue-600"
+                            ? "text-blue-400 hover:text-blue-300 border-slate-800"
+                            : "text-blue-600 hover:text-blue-800 border-blue-100 hover:border-blue-600"
                             }`}
                     >
                         Electronics Engineering Society
@@ -74,24 +79,8 @@ export default function Home({ darkMode }) {
                     A space to connect, share knowledge, and innovate.
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
-                    <Link
-                        to="/signup"
-                        className="w-full sm:w-44 py-3 bg-blue-700 text-white font-semibold rounded-lg shadow-sm hover:bg-blue-800 transition-all duration-300 active:scale-95 text-sm tracking-wide text-center"
-                    >
-                        GET STARTED
-                    </Link>
+                {!isLoggedIn ? (<div className="flex flex-col sm:flex-row items-center justify-center gap-5"><Link to="/signup" className="w-full sm:w-44 py-3 bg-blue-700 text-white font-semibold rounded-lg shadow-sm hover:bg-blue-800 transition-all duration-300 active:scale-95 text-sm tracking-wide text-center">GET STARTED</Link><Link to="/login" className={`w-full sm:w-44 py-3 font-semibold rounded-lg border shadow-sm transition-all duration-300 active:scale-95 text-sm tracking-wide text-center ${darkMode ? "bg-[#1e293b] text-slate-300 border-slate-700 hover:text-white" : "bg-white text-slate-600 border-slate-200 hover:text-blue-700 hover:border-blue-300"}`}>MEMBER LOGIN</Link></div>) : null}
 
-                    <Link
-                        to="/login"
-                        className={`w-full sm:w-44 py-3 font-semibold rounded-lg border shadow-sm transition-all duration-300 active:scale-95 text-sm tracking-wide text-center ${darkMode
-                                ? "bg-[#1e293b] text-slate-300 border-slate-700 hover:text-white"
-                                : "bg-white text-slate-600 border-slate-200 hover:text-blue-700 hover:border-blue-300"
-                            }`}
-                    >
-                        MEMBER LOGIN
-                    </Link>
-                </div>
             </div>
 
             <div
@@ -102,4 +91,4 @@ export default function Home({ darkMode }) {
             </div>
         </div>
     );
-}
+} 

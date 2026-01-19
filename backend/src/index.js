@@ -10,7 +10,16 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+import cors from "cors";
+
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "https://ees-k0om7ehne-projects-8d8c11e6.vercel.app"
+    ],
+    credentials: true
+}));
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
