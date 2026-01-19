@@ -12,7 +12,7 @@ const solutionSchema = new mongoose.Schema(
       ref: "User",
       required: true
     },
-    filePath: {
+    fileUrl: {
       type: String,
       required: true
     }
