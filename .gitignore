@@ -16,3 +16,5 @@ backend/dist
 # logs
 npm-debug.log*
 
+# upload
+backend/uploads/
