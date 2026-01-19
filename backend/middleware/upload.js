@@ -16,7 +16,9 @@ const upload = multer({
     ];
 
     if (!allowedTypes.includes(file.mimetype)) {
-      return cb(new Error("Invalid file type"), false);
+      const err = new Error("Invalid file type");
+      err.code = "LIMIT_FILE_TYPE";
+      return cb(err, false);
     }
 
     cb(null, true);
