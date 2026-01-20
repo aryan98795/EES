@@ -3,7 +3,7 @@ import ProblemStatement from "../models/ProblemStatement.js";
 import { auth, requireRole } from "../middleware/jwt.js";
 
 const router = express.Router();
-// Public: get all problem statements for an event
+
 router.get("/:eventId", async (req, res) => {
   try {
     const { eventId } = req.params;
@@ -18,7 +18,6 @@ router.get("/:eventId", async (req, res) => {
   }
 });
 
-// Coordinator only: add problem statement to an event
 router.post(
   "/:eventId",
   auth,

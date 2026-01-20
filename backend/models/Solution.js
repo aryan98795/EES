@@ -1,14 +1,14 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const solutionSchema = new mongoose.Schema(
+const solutionSchema = new Schema(
   {
     problemId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "ProblemStatement",
       required: true
     },
     studentId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true
     },
@@ -16,12 +16,8 @@ const solutionSchema = new mongoose.Schema(
       type: String,
       required: true
     }
-  },
-  {
-    timestamps: true
   }
 );
 
-const Solution = mongoose.model("Solution", solutionSchema);
+export default model("Solution", solutionSchema);
 
-export default Solution;

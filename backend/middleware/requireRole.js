@@ -1,5 +1,5 @@
 export const requireRole = (allowedRoles = []) => {
-  return (req, res, next) => {
+  const response = (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -10,4 +10,5 @@ export const requireRole = (allowedRoles = []) => {
 
     next();
   };
+  return response;
 };

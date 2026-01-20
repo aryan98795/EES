@@ -25,7 +25,6 @@ app.use("/api/solutions", solutionRoutes);
 
 mongoose.connect(process.env.MONGO_URI);
 
-
 app.get("/admin", auth, requireRole("admin"), (req, res) => {
     res.json({ message: "Admin access granted" });
 });
