@@ -10,7 +10,7 @@
   router.post(
     "/:problemId/upload",
     auth,
-    requireRole("student"),
+    requireRole("user"),
     upload.single("file"),
     async (req, res) => {
       try {
