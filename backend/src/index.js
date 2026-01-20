@@ -1,15 +1,14 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import authRoutes from "../routes/auth.js";
 import { auth, requireRole } from "../middleware/jwt.js";
 import adminRoutes from "../routes/admin.js";
 import eventsRoutes from "../routes/events.js";
 import problemStatementRoutes from "../routes/problemStatements.js";
 import solutionRoutes from "../routes/solutions.js"
-
-dotenv.config();
 
 const app = express();
 

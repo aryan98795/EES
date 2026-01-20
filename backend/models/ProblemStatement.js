@@ -1,13 +1,22 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 
-const ps = new Schema({
-  title: { type: String, required: true },
-  pdf: { type: String, required: true },
-  eventId: {
-    type: Schema.Types.ObjectId,
-    ref: "Event",
-    required: true
-  }
-});
+const problemStatementSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true
+    },
+    eventId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
+      required: true
+    },
+    fileUrl: {
+      type: String,
+      required: true
+    }
+  },
+  { timestamps: true }
+);
 
-export default model("ProblemStatement", ps);
+export default mongoose.model("ProblemStatement", problemStatementSchema);
