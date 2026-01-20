@@ -37,14 +37,14 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) return res.status(401).json({
-        message: "invalid credentials"
+        message: "invalid  credentials"
     });
 
     const ok = await bcrypt.compare(password, user.password);
 
     if (!ok) {
         return res.status(401).json({
-            message: "invalid credentials"
+            message: "invalid  credentials"
         });
     }
 
@@ -57,6 +57,59 @@ router.post("/login", async (req, res) => {
         token: token,
         role: user.role
     });
+});
+
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email, newPassword, confirmPassword } = req.body;
+
+    // input check karo
+    if (!email || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        message: "All fields are required"
+      });
+    }
+
+     //password match hona chaiye
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        message: "Passwords do not match"
+      });
+    }
+
+    //find user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        message: "Email does not exist"
+      });
+    }
+    // password same hona chaiye
+    const isSame = await bcrypt.compare(newPassword, user.password);
+    if (isSame) {
+      return res.status(400).json({
+        message: "New password cannot be same as old password"
+      });
+    }
+
+    //  Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    //  Save new password
+    user.password = hashedPassword;
+    await user.save();
+
+    //  Success response
+    return res.status(200).json({
+      message: "Password reset successful. Please login again."
+    });
+
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    return res.status(500).json({
+      message: "Server error"
+    });
+  }
 });
 
 export default router;

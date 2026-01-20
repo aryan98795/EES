@@ -17,8 +17,12 @@ export default function Login({ darkMode }) {
             localStorage.setItem("role", response.data.role);
             navigate("/dashboard");
         } catch (error) {
-            console.error("Login failed", error);
-        }
+  if (error.response) {
+    console.log(error.response.data.message);
+  } else {
+    console.log("Something went wrong");
+  }
+}
     };
 
     return (
@@ -81,8 +85,10 @@ export default function Login({ darkMode }) {
 
                 {/* Card Footer */}
                 <div className="mt-8 flex flex-col items-center gap-3">
-                    <button className="text-sm font-semibold text-blue-500 hover:text-blue-600 transition-colors">
-                        Forgot password?
+                    <button
+                     onClick={() => navigate("/forgot-password")}
+                     className="text-sm font-semibold text-blue-500 hover:text-blue-600 transition-colors">
+                     Forgot password??
                     </button>
                     <div className="h-[1px] w-full bg-slate-100 dark:bg-slate-800 my-2"></div>
                     <p className={`text-sm font-medium ${darkMode ? "text-slate-400" : "text-slate-500"}`}>

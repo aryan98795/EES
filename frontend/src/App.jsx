@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Landing from "./components/Landing";
 import Logout from "./pages/Logout";
 import Navbar from "./components/Navbar";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   // Theme state
@@ -36,6 +37,7 @@ function App() {
         <Route path="/login" element={<Login darkMode={darkMode} />} />
         <Route path="/signup" element={<Signup darkMode={darkMode} />} />
         <Route path="/logout" element={<Logout />} />
+        <Route  path="/forgot-password" element={<ForgotPassword darkMode={darkMode} />} />
         <Route
           path="/dashboard"
           element={
