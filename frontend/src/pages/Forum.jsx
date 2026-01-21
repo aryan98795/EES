@@ -9,7 +9,7 @@ export default function Forum() {
   const [posts, setPosts] = useState([]);
 
   const fetchPosts = async () => {
-    const res = api.get("/api/forum/posts");
+    const res = await api.get("/api/forum/posts");
     setPosts(Array.isArray(res.data) ? res.data : []);
   };
 
