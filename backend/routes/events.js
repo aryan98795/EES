@@ -21,7 +21,7 @@ router.get("/:eventId", async (req, res) => {
 router.post(
   "/create-event",
   auth,
-  requireRole("coordinator"),
+  requireRole(["coordinator"]),
   async (req, res) => {
     try {
       const { title } = req.body;
