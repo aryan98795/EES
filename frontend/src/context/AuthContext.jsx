@@ -8,7 +8,7 @@ const AuthProvider = ({ children }) => {
         const r = localStorage.getItem("role");
         return !!(t && r);
     });
-
+    const role = localStorage.getItem("role");
     return (
         <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
             {children}
