@@ -8,6 +8,7 @@ import Logout from "./pages/Logout";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import Forum from "./pages/Forum";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/forum" element={<Forum />} />
             <Route
               path="/dashboard"
               element={

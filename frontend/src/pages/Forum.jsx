@@ -2,31 +2,32 @@ import { useEffect, useState } from "react";
 import ForumPostCard from "../components/ForumPostCard";
 import { useAuth } from "../context/AuthContext";
 import CreateForumPost from "../components/CreateForumPost";
-
 import axios from "axios";
 
 export default function Forum() {
-  const [post, setPosts] = useState([]);
-  const { role } = useAuth();
+  const { role } = useAuth() || {};
+  const [posts, setPosts] = useState([]);
+
+  const fetchPosts = async () => {
+    const res = await axios.get("http://localhost:3000/api/forum/posts");
+    setPosts(Array.isArray(res.data) ? res.data : []);
+  };
+
   useEffect(() => {
     (async () => {
-      const res = await axios.get("/api/forum/posts");
-      setPosts(res.data);
+      await fetchPosts();
     })();
   }, []);
+
   return (
-    <div className="forum">
-      {role == "coordinator" && (
-        <CreateForumPost
-          onCreated={async () => {
-            const res = await axios.get("/api/forum/posts");
-            setPosts(res.data);
-          }}
-        />
+    <div style={{ padding: "20px" }}>
+      {role === "coordinator" && <CreateForumPost onCreated={fetchPosts} />}
+
+      {posts.length === 0 ? (
+        <p>No posts yet</p>
+      ) : (
+        posts.map((post) => <ForumPostCard key={post._id} post={post} />)
       )}
-      {post.map((post) => (
-        <ForumPostCard key={post._id} post={post} />
-      ))}
     </div>
   );
 }

@@ -6,11 +6,6 @@ const problemStatementSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    eventId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Event",
-      required: true
-    },
     fileUrl: {
       type: String,
       required: true

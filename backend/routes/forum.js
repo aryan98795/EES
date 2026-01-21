@@ -6,6 +6,6 @@ import { requireRole } from "../middleware/requireRole.js";
 const router = express.Router();
 
 router.post("/posts", auth, requireRole(["coordinator", "admin"]), createPost);
-router.get("/post", getPosts);
+router.get("/posts", getPosts);
 
 export default router;

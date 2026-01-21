@@ -10,11 +10,6 @@ const s = new Schema({
         type: String,
         required: true,
     },
-    postedBy: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-});
+},);
 
 export default model("ForumPost", s);
