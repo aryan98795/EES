@@ -4,13 +4,14 @@ import { auth, requireRole } from "../middleware/jwt.js";
 import upload from "../middleware/upload.js";
 import path from "path";
 import cloudinary from "../config/cloudinary.js";
+import { uploadToCloudinary } from "../utils/cloudinaryUpload.js";
 
 const router = express.Router();
 
 router.post(
   "/:problemId/upload",
   auth,
-  requireRole(["student"]),
+  requireRole(["student", "admin", "coordinator"]),
   upload.single("file"),
   async (req, res) => {
     try {
@@ -20,36 +21,27 @@ router.post(
 
       const { problemId } = req.params;
 
-      cloudinary.uploader
-        .upload_stream({ resource_type: "auto" }, async (error, result) => {
-          try {
-            if (error) {
-              return res
-                .status(500)
-                .json({ message: "Cloudinary upload failed" });
-            }
+      const result = await uploadToCloudinary(req.file.buffer);
 
-            const solution = await Solution.create({
-              problemId,
-              studentId: req.user.id,
-              fileUrl: result.secure_url,
-            });
+      const solution = await Solution.create({
+        problemId,
+        studentId: req.user.id,
+        fileUrl: result.secure_url,
+      });
 
-            return res.status(201).json({
-              message: "Solution uploaded successfully",
-              solution,
-            });
-          } catch (err) {
-            return res.status(500).json({ message: err.message });
-          }
-        })
-        .end(req.file.buffer);
-
+      res.status(201).json({
+        message: "Solution uploaded successfully",
+        solution,
+      });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      console.error("Solution upload failed:", err);
+      res.status(500).json({
+        message: "Failed to upload solution",
+      });
     }
   }
 );
+
 
 router.get(
   "/:solutionId/download",
