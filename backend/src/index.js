@@ -1,14 +1,15 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
 import authRoutes from "../routes/auth.js";
 import { auth, requireRole } from "../middleware/jwt.js";
 import adminRoutes from "../routes/admin.js";
 import eventsRoutes from "../routes/events.js";
 import problemStatementRoutes from "../routes/problemStatements.js";
-import solutionRoutes from "../routes/solutions.js"
+import solutionRoutes from "../routes/solutions.js";
+import forumRoutes from "../routes/forum.js";
 
 const app = express();
 
@@ -21,13 +22,14 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/problems", problemStatementRoutes);
 app.use("/api/solutions", solutionRoutes);
+app.use("/api/forum", forumRoutes);
 
 mongoose.connect(process.env.MONGO_URI);
 
 app.get("/admin", auth, requireRole("admin"), (req, res) => {
-    res.json({ message: "Admin access granted" });
+  res.json({ message: "Admin access granted" });
 });
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on port ${process.env.PORT || 3000}`);
+  console.log(`Server is running on port ${process.env.PORT || 3000}`);
 });

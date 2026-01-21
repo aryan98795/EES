@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const api = axios.create({
- baseURL: "https://ees-408s.onrender.com"
- //   baseURL: "http://localhost:3000"
+  baseURL: "https://ees-408s.onrender.com",
+  // baseURL: "http://localhost:3000"
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
-    if (token) config.headers.authorization = `Bearer ${token}`;
-    return config;
-})
+  const token = localStorage.getItem("token");
+  if (token) config.headers.authorization = `Bearer ${token}`;
+  return config;
+});
 
 export default api;
