@@ -9,6 +9,8 @@ import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import Forum from "./pages/Forum";
+import EventDetails from "./pages/EventDetails";
+import CreateEvent from "./pages/CreateEvent";
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/forum" element={<Forum />} />
+            <Route path="/events/:eventId" element={<EventDetails />} />
             <Route
               path="/dashboard"
               element={
@@ -31,6 +34,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/dashboard/create-event"
+              element={
+                <ProtectedRoute>
+                  <CreateEvent />
+                </ProtectedRoute>
+              }
+            />
+
           </Routes>
         </ThemeProvider>
       </AuthProvider>

@@ -4,35 +4,90 @@ import { auth, requireRole } from "../middleware/jwt.js";
 
 const router = express.Router();
 
-router.get("/:eventId", async (req, res) => {
+/* ===================== PUBLIC ===================== */
+
+// Get all events (navbar dropdown)
+router.get("/", async (req, res) => {
   try {
-    const { eventId } = req.params;
+    const events = await Event.find()
+      .select("title")
+      .sort({ createdAt: -1 });
 
-    const problems = await ProblemStatement.find({ eventId }).sort({
-      createdAt: -1
-    });
-
-    res.json(problems);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.json(events);
+  } catch {
+    res.status(500).json({ message: "Failed to fetch events" });
   }
 });
 
+// Get single event details
+router.get("/:eventId", async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.eventId);
+    if (!event) return res.status(404).json({ message: "Event not found" });
+    res.json(event);
+  } catch {
+    res.status(500).json({ message: "Failed to fetch event" });
+  }
+});
+
+/* ================= COORDINATOR / ADMIN ================= */
+
+// Create event
 router.post(
-  "/create-event",
+  "/",
   auth,
-  requireRole("coordinator"),
+  requireRole(["coordinator", "admin"]),
   async (req, res) => {
     try {
-      const { title } = req.body;
+      const { title, description, resources, coordinators } = req.body;
 
       const event = await Event.create({
         title,
+        description,
+        resources,
+        coordinators,
       });
 
       res.status(201).json(event);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+    } catch {
+      res.status(500).json({ message: "Failed to create event" });
+    }
+  }
+);
+
+// Update event
+router.put(
+  "/:eventId",
+  auth,
+  requireRole(["coordinator", "admin"]),
+  async (req, res) => {
+    try {
+      const event = await Event.findByIdAndUpdate(
+        req.params.eventId,
+        req.body,
+        { new: true }
+      );
+
+      if (!event) return res.status(404).json({ message: "Event not found" });
+      res.json(event);
+    } catch {
+      res.status(500).json({ message: "Failed to update event" });
+    }
+  }
+);
+
+// Delete event
+router.delete(
+  "/:eventId",
+  auth,
+  requireRole(["coordinator", "admin"]),
+  async (req, res) => {
+    try {
+      const event = await Event.findByIdAndDelete(req.params.eventId);
+      if (!event) return res.status(404).json({ message: "Event not found" });
+      res.json({ message: "Event deleted" });
+    } catch {
+      res.status(500).json({ message: "Failed to delete event" });
     }
   }
 );
