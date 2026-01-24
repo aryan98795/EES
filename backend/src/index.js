@@ -35,13 +35,14 @@ app.post(
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const { title } = req.body;
+    const { title, formUrl } = req.body;
+    console.log(req.body);
 
     cloudinary.uploader
       .upload_stream(
         {
           resource_type: "raw",
-          public_id: req.file.originalname.split(".")[0],
+          public_id: req.file.originalname,
           use_filename: true,
           unique_filename: false,
         },
@@ -53,6 +54,7 @@ app.post(
           const ps = await ProblemStatement.create({
             title,
             fileUrl: result.secure_url,
+            formUrl: formUrl,
           });
 
           res.status(201).json(ps);

@@ -2,11 +2,11 @@ import ForumPost from "../models/ForumPost.js";
 
 export const createPost = async (req, res) => {
   try {
-    const { title, fileUrl } = req.body;
-    console.log(req.body);
+    const { title, fileUrl, formUrl } = req.body;
     const post = await ForumPost.create({
       title,
       fileUrl,
+      formUrl,
     });
 
     res.status(201).json(post);
@@ -21,7 +21,7 @@ export const createPost = async (req, res) => {
 export const getPosts = async (req, res) => {
   const posts = await ForumPost.find()
     .sort({ createdAt: -1 })
-    .select("title fileUrl createdAt");
+    .select("title fileUrl formUrl createdAt");
 
   res.json(posts);
 };

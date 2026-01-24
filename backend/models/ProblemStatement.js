@@ -4,14 +4,17 @@ const problemStatementSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     fileUrl: {
       type: String,
-      required: true
+      required: true,
+    },
+    formUrl: {
+      type:String
     }
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("ProblemStatement", problemStatementSchema);
