@@ -4,6 +4,7 @@ import { FiChevronDown, FiSun, FiMoon, FiMenu, FiX } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import {Link, NavLink, useNavigate} from "reat-router-dom";
 import api from "../api/axios";
 
 const Navbar = () => {

@@ -42,6 +42,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/dashboard/edit-event/:eventId"
+              element={
+                <ProtectedRoute>
+                  <CreateEvent />
+                </ProtectedRoute>
+              }
+            />
+
 
           </Routes>
         </ThemeProvider>

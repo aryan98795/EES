@@ -62,10 +62,24 @@ router.put(
   requireRole(["coordinator", "admin"]),
   async (req, res) => {
     try {
+      const allowedFields = [
+        "title",
+        "description",
+        "resources",
+        "coordinators"
+      ];
+
+      const updateData = {};
+
+      for (const field of allowedFields) {
+        if (req.body[field] !== undefined) {
+          updateData[field] = req.body[field];
+        }
+      }
       const event = await Event.findByIdAndUpdate(
         req.params.eventId,
-        req.body,
-        { new: true }
+        { $set: updateData },
+        { new: true, runValidators: true }
       );
 
       if (!event) return res.status(404).json({ message: "Event not found" });
