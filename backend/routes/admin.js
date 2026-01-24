@@ -8,7 +8,7 @@ const router = express.Router();
 router.post(
     "/create-user",
     auth,
-    requireRole("admin"),
+    requireRole(["admin"]),
     async (req, res) => {
 
         const { name, email, password, role } = req.body;
