@@ -62,33 +62,36 @@ router.put(
   requireRole(["coordinator", "admin"]),
   async (req, res) => {
     try {
-      const allowedFields = [
-        "title",
-        "description",
-        "resources",
-        "coordinators"
-      ];
+      const { title, description, resources, coordinators } = req.body;
 
       const updateData = {};
+      if (title !== undefined) updateData.title = title;
+      if (description !== undefined) updateData.description = description;
+      if (resources !== undefined) updateData.resources = resources;
+      if (coordinators !== undefined) updateData.coordinators = coordinators;
 
-      for (const field of allowedFields) {
-        if (req.body[field] !== undefined) {
-          updateData[field] = req.body[field];
-        }
+      if (Object.keys(updateData).length === 0) {
+        return res.status(400).json({ message: "No valid fields to update" });
       }
+
       const event = await Event.findByIdAndUpdate(
         req.params.eventId,
         { $set: updateData },
         { new: true, runValidators: true }
       );
 
-      if (!event) return res.status(404).json({ message: "Event not found" });
+      if (!event) {
+        return res.status(404).json({ message: "Event not found" });
+      }
+
       res.json(event);
-    } catch {
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: "Failed to update event" });
     }
   }
 );
+
 
 // Delete event
 router.delete(
