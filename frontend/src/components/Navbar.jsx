@@ -4,6 +4,8 @@ import { FiChevronDown, FiSun, FiMoon, FiMenu, FiX } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import {Link, NavLink, useNavigate} from "reat-router-dom";
+import api from "../api/axios";
 
 const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,6 +13,8 @@ const Navbar = () => {
     const { isLoggedIn } = useAuth();
     const { darkMode, setDarkMode } = useTheme();
     const [auth, setAuth] = useState(!!localStorage.getItem("token"));
+    const [events, setEvents] = useState([]);
+    const role = localStorage.getItem("role");
 
     useEffect(() => {
         const f = () => {
@@ -19,6 +23,21 @@ const Navbar = () => {
         window.addEventListener("storage", f);
         return () => window.removeEventListener("storage", f);
     }, []);
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const res = await api.get("/api/events");
+                setEvents(res.data);
+            } catch (err) {
+                console.error("Failed to fetch events", err);
+            }
+        };
+
+        fetchEvents();
+    }, []);
+    // useEffect(() => {
+    //     setEvents(mockEvents);
+    // }, []);
 
     const navLinks = [
         { to: "/", label: "Home" },
@@ -54,13 +73,75 @@ const Navbar = () => {
                         <span className="text-2xl font-bold">EES</span>
                     </Link>
 
-                    <div className="hidden lg:flex items-center gap-8">
-                        {navLinks.map((link) => (
-                            <NavLink key={link.to} to={link.to} className="hover:text-blue-500 transition-colors font-medium">
-                                {link.label}
-                            </NavLink>
-                        ))}
+                    <div className="hidden lg:flex items-center gap-8 relative">
+
+                        <NavLink to="/" className="hover:text-blue-500 font-medium">
+                            Home
+                        </NavLink>
+
+              {/* EVENTS DROPDOWN */}
+<div className="relative group">
+  {/* Trigger */}
+  <div className="flex items-center gap-1 font-medium cursor-pointer hover:text-blue-500">
+    <span>Events</span>
+    <FiChevronDown className="opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+  </div>
+
+  {/* Dropdown */}
+  <div
+    className="
+      absolute top-full left-0 mt-2 w-56
+      bg-white dark:bg-[#1e293b]
+      shadow-lg rounded-md z-50 overflow-hidden
+      opacity-0 invisible
+      group-hover:opacity-100 group-hover:visible
+      transition-all duration-200
+    "
+  >
+    {/* + CREATE EVENT */}
+    {(role === "coordinator" || role === "admin") && (
+      <div
+        className="px-4 py-2 text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer border-b"
+        onClick={() => navigate("/dashboard/create-event")}
+      >
+        <span className="text-lg">＋</span>
+        <span>Create Event</span>
+      </div>
+    )}
+
+    {/* EVENTS LIST */}
+    {events.length === 0 && (
+      <div className="px-4 py-2 text-sm text-slate-500">
+        No events
+      </div>
+    )}
+
+    {events.map((event) => (
+      <div
+        key={event._id}
+        className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer"
+        onClick={() => navigate(`/events/${event._id}`)}
+      >
+        {event.title}
+      </div>
+    ))}
+  </div>
+</div>
+
+
+                        <NavLink to="/forum" className="hover:text-blue-500 font-medium">
+                            Forum
+                        </NavLink>
+
+                        <NavLink to="/alumni" className="hover:text-blue-500 font-medium">
+                            Alumni
+                        </NavLink>
+
+                        <NavLink to="/team" className="hover:text-blue-500 font-medium">
+                            Team
+                        </NavLink>
                     </div>
+
 
                     <div className="flex items-center gap-4">
                         <motion.button whileTap={{ scale: 0.8 }} onClick={() => setDarkMode(!darkMode)} className="p-2">
