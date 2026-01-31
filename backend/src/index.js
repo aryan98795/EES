@@ -81,10 +81,10 @@ app.get("/api/ps/:psId/download", auth, async (req, res) => {
 
 mongoose.connect(process.env.MONGO_URI);
 
-app.get("/admin", auth, requireRole("admin"), (req, res) => {
+app.get("/admin", auth, requireRole(["admin"]), (req, res) => {
   res.json({ message: "Admin access granted" });
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
   console.log(`Server is running on port ${process.env.PORT || 3000}`);
 });

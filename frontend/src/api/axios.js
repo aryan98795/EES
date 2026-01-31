@@ -1,8 +1,9 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 const api = axios.create({
-  baseURL: "https://ees-408s.onrender.com",
- // baseURL: "http://localhost:3000",
+  baseURL: baseURL,
 });
 
 api.interceptors.request.use((config) => {

@@ -1,11 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-
+import { useEffect } from "react";
 
 export default function Home() {
     const { isLoggedIn } = useAuth();
     const { darkMode } = useTheme();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/dashboard");
+        }
+    }, [isLoggedIn, navigate]);
     const textureStyles = `
         @keyframes textureMove {
             0% { transform: translate(0, 0); }

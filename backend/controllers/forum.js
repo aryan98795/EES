@@ -19,9 +19,16 @@ export const createPost = async (req, res) => {
 };
 
 export const getPosts = async (req, res) => {
-  const posts = await ForumPost.find()
-    .sort({ createdAt: -1 })
-    .select("title fileUrl formUrl createdAt");
+  try {
+    const posts = await ForumPost.find()
+      .sort({ createdAt: -1 })
+      .select("title fileUrl formUrl createdAt");
 
-  res.json(posts);
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to fetch posts",
+    });
+  }
 };

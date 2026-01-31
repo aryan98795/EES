@@ -11,6 +11,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Forum from "./pages/Forum";
 import EventDetails from "./pages/EventDetails";
 import CreateEvent from "./pages/CreateEvent";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/forum" element={<Forum />} />
             <Route path="/events/:eventId" element={<EventDetails />} />

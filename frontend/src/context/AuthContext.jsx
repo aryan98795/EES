@@ -3,14 +3,14 @@ import { createContext, useContext, useState } from "react";
 const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
-  const role = localStorage.getItem("role");
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const t = localStorage.getItem("token");
     const r = localStorage.getItem("role");
     return !!(t && r);
   });
+  const [role, setRole] = useState(() => localStorage.getItem("role"));
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, role }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, role, setRole }}>
       {children}
     </AuthContext.Provider>
   );
